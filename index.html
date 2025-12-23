@@ -1,52 +1,171 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de UUID</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        #uuid {
-            font-size: 1.5em;
-            margin: 20px 0;
-            word-break: break-all;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surpresa 🎁</title>
+
+<style>
+:root{
+  --primary:#ff2f68;
+  --secondary:#ff6f91;
+  --bg:#f2f3f7;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  height:100vh;
+  background:var(--bg);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Container */
+.app{
+  width:100%;
+  max-width:380px;
+  padding:30px 20px;
+  text-align:center;
+}
+
+/* Envelope box */
+.envelope-box{
+  position:relative;
+  width:290px;
+  height:220px;
+  margin:0 auto;
+  cursor:pointer;
+}
+
+/* Envelope body (MÁSCARA) */
+.envelope{
+  position:absolute;
+  inset:0;
+  background:var(--primary);
+  border-radius:16px;
+  overflow:hidden; /* 🔑 ISSO ESCONDE A CARTA */
+  box-shadow:0 15px 30px rgba(0,0,0,.3);
+  z-index:2;
+}
+
+/* Dobras inferiores */
+.envelope::before,
+.envelope::after{
+  content:"";
+  position:absolute;
+  bottom:0;
+  width:0;
+  height:0;
+  border-style:solid;
+}
+
+.envelope::before{
+  left:0;
+  border-width:90px 0 0 140px;
+  border-color:transparent transparent transparent var(--secondary);
+}
+
+.envelope::after{
+  right:0;
+  border-width:90px 140px 0 0;
+  border-color:transparent var(--secondary) transparent transparent;
+}
+
+/* Aba */
+.flap{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#e81f5a;
+  clip-path:polygon(0 0,50% 55%,100% 0);
+  transform-origin:top;
+  transition:transform .8s ease;
+  z-index:2;
+}
+
+/* Carta (COMEÇA ESCONDIDA) */
+.card{
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  transform:translate(-50%, 120%);
+  width:88%;
+  background:#fff;
+  border-radius:14px;
+  padding:18px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  transition:transform 1s cubic-bezier(.4,0,.2,1);
+  z-index:3;
+}
+
+.card h1{
+  margin:5px 0;
+  color:var(--primary);
+  font-size:18px;
+}
+
+.card p{
+  margin:8px 0;
+  font-size:14px;
+  color:#333;
+}
+
+/* Abrir */
+.envelope-box.open .flap{
+  transform:rotateX(180deg);
+}
+
+.envelope-box.open .card{
+  transform:translate(-50%, -20%);
+}
+
+/* Dica */
+.hint{
+  margin-top:20px;
+  font-size:14px;
+  color:#666;
+}
+</style>
 </head>
+
 <body>
-    <h1>Gerador de UUID</h1>
-    <button onclick="displayUUID()">Gerar UUID</button>
-    <div id="uuid">Clique no botão para gerar um UUID.</div>
 
-    <script>
-        function generateUUID() {
-            // Função para gerar um UUID v4
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-        }
+<div class="app">
+  <div class="envelope-box" onclick="abrir()">
+    <div class="envelope">
+      <!-- CARTA FICA DENTRO DA MÁSCARA -->
+      <div class="card">
+        <h1>🎉 Feliz Aniversário</h1>
+        <p><strong>Kelven</strong>,</p>
+        <p>
+          Que seu dia seja cheio de alegria,  
+          saúde e momentos inesquecíveis.
+        </p>
+        <p>✨ FELIZ ANIVERSÁRIO ✨</p>
+      </div>
+    </div>
 
-        function displayUUID() {
-            let uuid = localStorage.getItem('uuid');
-            if (!uuid) {
-                uuid = generateUUID();
-                localStorage.setItem('uuid', uuid);
-            }
-            document.getElementById('uuid').innerText = uuid;
-        }
+    <div class="flap"></div>
+  </div>
 
-        // Exibe o UUID ao carregar a página, se já estiver armazenado
-        window.onload = function() {
-            displayUUID();
-        }
-    </script>
+  <div class="hint">Toque no envelope</div>
+</div>
+
+<script>
+function abrir(){
+  document.querySelector('.envelope-box').classList.toggle('open');
+}
+</script>
+
 </body>
 </html>
